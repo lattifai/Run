@@ -15,8 +15,8 @@
 
 [project]
 name = "lattifai_run"
-# version = "0.1.0.rc0"
-dynamic = ["version"]
+version = "1.0.0.rc1"
+# dynamic = ["version"]
 description = "A powerful tool designed to streamline the configuration, execution and management of Machine Learning experiments across various computing environments."
 dependencies = [
     "inquirerpy>=0.3.4",
