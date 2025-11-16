@@ -14,7 +14,7 @@
 # limitations under the License.
 
 [project]
-name = "nemo_run"
+name = "lai_run"
 # version = "0.1.0.rc0"
 dynamic = ["version"]
 description = "A powerful tool designed to streamline the configuration, execution and management of Machine Learning experiments across various computing environments."
@@ -38,8 +38,8 @@ readme = "README.md"
 requires-python = ">= 3.10"
 
 [project.scripts]
-"nemorun" = "nemo_run.__main__:app"
-"nemo" = "nemo_run.__main__:app"
+"lairun" = "nemo_run.__main__:app"
+# "lattifai" = "nemo_run.__main__:app"
 
 [project.entry-points."torchx.schedulers"]
 slurm_tunnel = "nemo_run.run.torchx_backend.schedulers.slurm:create_scheduler"

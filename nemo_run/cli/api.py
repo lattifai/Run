@@ -541,8 +541,8 @@ def create_cli(
     nested_entrypoints_creation: bool = True,
 ) -> Typer:
     app: Typer = Typer(pretty_exceptions_enable=False)
-    entrypoints = metadata.entry_points().select(group="nemo_run.cli")
-    metadata.entry_points().select(group="nemo_run.cli")
+    entrypoints = metadata.entry_points().select(group="lai_run.cli")
+    metadata.entry_points().select(group="lai_run.cli")
     for ep in entrypoints:
         _get_or_add_typer(app, name=ep.name)
 
@@ -577,8 +577,8 @@ def create_cli(
             type="task",
         )
     else:
-        entrypoints = metadata.entry_points().select(group="nemo_run.cli")
-        metadata.entry_points().select(group="nemo_run.cli")
+        entrypoints = metadata.entry_points().select(group="lai_run.cli")
+        metadata.entry_points().select(group="lai_run.cli")
         for ep in entrypoints:
             _get_or_add_typer(app, name=ep.name)
 
@@ -769,7 +769,7 @@ def _get_return_type(fn: Callable) -> Type:
 
 @cache
 def _load_entrypoints():
-    entrypoints = metadata.entry_points().select(group="nemo_run.cli")
+    entrypoints = metadata.entry_points().select(group="lai_run.cli")
     for ep in entrypoints:
         try:
             ep.load()

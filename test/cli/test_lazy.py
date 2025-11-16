@@ -774,7 +774,7 @@ class TestLazyModule:
 
     def test_lazy_module_nested_getattr(self):
         """Test __getattr__ for nested lazy modules."""
-        lazy_mod = LazyModule("nemo_run.cli")
+        lazy_mod = LazyModule("lai_run.cli")
         lazy_lazy = lazy_mod.lazy  # nemo_run.cli -> LazyModule("nemo_run.cli.lazy")
         assert isinstance(lazy_lazy, LazyModule)
         assert lazy_lazy.name == "nemo_run.cli.lazy"

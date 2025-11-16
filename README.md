@@ -1,4 +1,7 @@
-# NeMo Run
+# Lai/LattifAI Run
+
+> [!NOTE]
+> This is a customized version of [NeMo Run](https://github.com/NVIDIA-NeMo/Run), tailored for the LattifAI project with specific modifications and enhancements to meet our workflow requirements.
 
 > [!IMPORTANT]
 > NeMo Run is still in active development and this is a pre-release. The API is subject to change without notice until the project reaches version 1.0.0
