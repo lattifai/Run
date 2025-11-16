@@ -621,7 +621,7 @@ class TestOmegaConfIntegration:
 class TestLazyImports:
     def test_lazy_imports_context(self):
         """Test that the lazy_imports context manager works correctly."""
-        from nemo_run.cli.lazy import LazyModule, lazy_imports
+        from lai_run.cli.lazy import LazyModule, lazy_imports
 
         # Inside the context, imports should be lazy
         with lazy_imports():
@@ -647,7 +647,7 @@ class TestLazyImports:
 
     def test_lazy_imports_with_fallback(self):
         """Test that lazy_imports with fallback works correctly."""
-        from nemo_run.cli.lazy import LazyModule, lazy_imports
+        from lai_run.cli.lazy import LazyModule, lazy_imports
 
         # With fallback, existing modules should be imported normally
         with lazy_imports(fallback_to_lazy=True):
@@ -668,7 +668,7 @@ class TestLazyImports:
 
     def test_from_import_simple_attribute(self):
         """Test `from ... import attribute`."""
-        from nemo_run.cli.lazy import LazyTarget, lazy_imports
+        from lai_run.cli.lazy import LazyTarget, lazy_imports
 
         with lazy_imports():
             # Simulate: from os import path
@@ -689,7 +689,7 @@ class TestLazyImports:
 
     def test_from_import_nested_attribute(self):
         """Test `from ... import module.attribute`."""
-        from nemo_run.cli.lazy import LazyModule, LazyTarget, lazy_imports
+        from lai_run.cli.lazy import LazyModule, LazyTarget, lazy_imports
 
         with lazy_imports():
             # Simulate: from os import path.join
@@ -715,7 +715,7 @@ class TestLazyImports:
 
     def test_from_import_multiple_attributes(self):
         """Test `from ... import attr1, attr2.subattr`."""
-        from nemo_run.cli.lazy import LazyModule, LazyTarget, lazy_imports
+        from lai_run.cli.lazy import LazyModule, LazyTarget, lazy_imports
 
         with lazy_imports():
             # Simulate: from os import environ, path.join
@@ -775,16 +775,16 @@ class TestLazyModule:
     def test_lazy_module_nested_getattr(self):
         """Test __getattr__ for nested lazy modules."""
         lazy_mod = LazyModule("lai_run.cli")
-        lazy_lazy = lazy_mod.lazy  # nemo_run.cli -> LazyModule("nemo_run.cli.lazy")
+        lazy_lazy = lazy_mod.lazy  # nemo_run.cli -> LazyModule("lai_run.cli.lazy")
         assert isinstance(lazy_lazy, LazyModule)
-        assert lazy_lazy.name == "nemo_run.cli.lazy"
+        assert lazy_lazy.name == "lai_run.cli.lazy"
 
         # Accessing attribute on a nested module currently returns LazyModule due to '.' in self.name
         lazy_entrypoint_attr = (
             lazy_lazy.LazyEntrypoint
-        )  # nemo_run.cli.lazy -> LazyModule("nemo_run.cli.lazy.LazyEntrypoint")
+        )  # lai_run.cli.lazy -> LazyModule("lai_run.cli.lazy.LazyEntrypoint")
         assert isinstance(lazy_entrypoint_attr, LazyModule)  # Adjusted assertion
-        assert lazy_entrypoint_attr.name == "nemo_run.cli.lazy.LazyEntrypoint"
+        assert lazy_entrypoint_attr.name == "lai_run.cli.lazy.LazyEntrypoint"
 
         # Accessing attribute on a top-level module currently returns LazyTarget
         lazy_math = LazyModule("math")
@@ -814,18 +814,18 @@ class TestLazyModule:
 
     def test_lazy_module_pickle(self):
         """Test that LazyModule can be pickled and unpickled."""
-        lazy_mod = LazyModule("nemo_run.cli.lazy")
+        lazy_mod = LazyModule("lai_run.cli.lazy")
         _ = lazy_mod.LazyEntrypoint  # Access creates a LazyModule in _lazy_attrs
 
         pickled = pickle.dumps(lazy_mod)
         unpickled = pickle.loads(pickled)
 
         assert isinstance(unpickled, LazyModule)
-        assert unpickled.name == "nemo_run.cli.lazy"
+        assert unpickled.name == "lai_run.cli.lazy"
         assert "LazyEntrypoint" in unpickled._lazy_attrs
         # Check that the stored attribute is a LazyModule, matching the current __getattr__ logic
         assert isinstance(unpickled._lazy_attrs["LazyEntrypoint"], LazyModule)  # Adjusted assertion
-        assert unpickled._lazy_attrs["LazyEntrypoint"].name == "nemo_run.cli.lazy.LazyEntrypoint"
+        assert unpickled._lazy_attrs["LazyEntrypoint"].name == "lai_run.cli.lazy.LazyEntrypoint"
 
 
 class TestLazyTarget:
@@ -936,7 +936,7 @@ class TestHelperFunctions:
 
     def test_dummy_fn(self):
         """Test that _dummy_fn raises NotImplementedError."""
-        from nemo_run.cli.lazy import _dummy_fn
+        from lai_run.cli.lazy import _dummy_fn
 
         with pytest.raises(NotImplementedError):
             _dummy_fn()
@@ -948,7 +948,7 @@ class TestHelperFunctions:
         assert math_sin == math.sin
 
         # Test importing from a nested module
-        lazy_target = import_module("nemo_run.cli.lazy.LazyTarget")
+        lazy_target = import_module("lai_run.cli.lazy.LazyTarget")
         assert lazy_target == LazyTarget
 
         # Test non-existent module

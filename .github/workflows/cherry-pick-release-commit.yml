@@ -1,9 +1,11 @@
 name: Create PR to main with cherry-pick from release
 
+# Workflow disabled
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:  # Manual trigger only
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   cherry-pick:

@@ -14,12 +14,14 @@
 
 name: Build, test, and publish a PyPi wheel (to testpypi)
 
+# Workflow disabled
 on:
-  push:
-    branches:
-      - "main"
-      - "[rv][0-9].[0-9].[0-9]"
-      - "[rv][0-9].[0-9].[0-9]rc[0-9]"
+  workflow_dispatch:  # Manual trigger only
+  # push:
+  #   branches:
+  #     - "main"
+  #     - "[rv][0-9].[0-9].[0-9]"
+  #     - "[rv][0-9].[0-9].[0-9]rc[0-9]"
   pull_request:
 
 defaults:

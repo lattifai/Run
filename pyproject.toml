@@ -14,7 +14,7 @@
 # limitations under the License.
 
 [project]
-name = "lai_run"
+name = "lattifai_run"
 # version = "0.1.0.rc0"
 dynamic = ["version"]
 description = "A powerful tool designed to streamline the configuration, execution and management of Machine Learning experiments across various computing environments."
