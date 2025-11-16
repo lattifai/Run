@@ -587,20 +587,21 @@ def create_cli(
         ):
             _add_typer_nested(app, list_entrypoints())
 
-        app.add_typer(
-            devspace_cli.create(),
-            name="devspace",
-            help="[Module] Manage devspaces",
-            cls=GeneralCommand,
-            context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
-        )
-        app.add_typer(
-            experiment_cli.create(),
-            name="experiment",
-            help="[Module] Manage Experiments",
-            cls=GeneralCommand,
-            context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
-        )
+        if False:
+            app.add_typer(
+                devspace_cli.create(),
+                name="devspace",
+                help="[Module] Manage devspaces",
+                cls=GeneralCommand,
+                context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
+            )
+            app.add_typer(
+                experiment_cli.create(),
+                name="experiment",
+                help="[Module] Manage Experiments",
+                cls=GeneralCommand,
+                context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
+            )
 
     if add_verbose_callback:
         add_global_options(app)

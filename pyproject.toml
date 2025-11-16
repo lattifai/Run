@@ -39,7 +39,8 @@ requires-python = ">= 3.10"
 
 [project.scripts]
 "lairun" = "nemo_run.__main__:app"
-# "lattifai" = "nemo_run.__main__:app"
+"lai" = "nemo_run.__main__:app"
+"lattifai" = "nemo_run.__main__:app"
 
 [project.entry-points."torchx.schedulers"]
 slurm_tunnel = "nemo_run.run.torchx_backend.schedulers.slurm:create_scheduler"
