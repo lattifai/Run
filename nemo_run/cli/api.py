@@ -896,7 +896,7 @@ class RunContext:
             repl: bool = typer.Option(False, "--repl", "-r", help="Enter interactive mode"),
             detach: bool = typer.Option(False, "--detach", help="Detach from the run"),
             skip_confirmation: bool = typer.Option(
-                False, "--yes", "-y", "--no-confirm", help="Skip confirmation before execution"
+                False, "--yes", "-Y", "--no-confirm", help="Skip confirmation before execution"
             ),
             tail_logs: bool = typer.Option(
                 False, "--tail-logs/--no-tail-logs", help="Tail logs after execution"
