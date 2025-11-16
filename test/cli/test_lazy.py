@@ -621,7 +621,7 @@ class TestOmegaConfIntegration:
 class TestLazyImports:
     def test_lazy_imports_context(self):
         """Test that the lazy_imports context manager works correctly."""
-        from lai_run.cli.lazy import LazyModule, lazy_imports
+        from nemo_run.cli.lazy import LazyModule, lazy_imports
 
         # Inside the context, imports should be lazy
         with lazy_imports():
@@ -647,7 +647,7 @@ class TestLazyImports:
 
     def test_lazy_imports_with_fallback(self):
         """Test that lazy_imports with fallback works correctly."""
-        from lai_run.cli.lazy import LazyModule, lazy_imports
+        from nemo_run.cli.lazy import LazyModule, lazy_imports
 
         # With fallback, existing modules should be imported normally
         with lazy_imports(fallback_to_lazy=True):
@@ -668,7 +668,7 @@ class TestLazyImports:
 
     def test_from_import_simple_attribute(self):
         """Test `from ... import attribute`."""
-        from lai_run.cli.lazy import LazyTarget, lazy_imports
+        from nemo_run.cli.lazy import LazyTarget, lazy_imports
 
         with lazy_imports():
             # Simulate: from os import path
@@ -689,7 +689,7 @@ class TestLazyImports:
 
     def test_from_import_nested_attribute(self):
         """Test `from ... import module.attribute`."""
-        from lai_run.cli.lazy import LazyModule, LazyTarget, lazy_imports
+        from nemo_run.cli.lazy import LazyModule, LazyTarget, lazy_imports
 
         with lazy_imports():
             # Simulate: from os import path.join
@@ -715,7 +715,7 @@ class TestLazyImports:
 
     def test_from_import_multiple_attributes(self):
         """Test `from ... import attr1, attr2.subattr`."""
-        from lai_run.cli.lazy import LazyModule, LazyTarget, lazy_imports
+        from nemo_run.cli.lazy import LazyModule, LazyTarget, lazy_imports
 
         with lazy_imports():
             # Simulate: from os import environ, path.join
@@ -936,7 +936,7 @@ class TestHelperFunctions:
 
     def test_dummy_fn(self):
         """Test that _dummy_fn raises NotImplementedError."""
-        from lai_run.cli.lazy import _dummy_fn
+        from nemo_run.cli.lazy import _dummy_fn
 
         with pytest.raises(NotImplementedError):
             _dummy_fn()
@@ -948,7 +948,7 @@ class TestHelperFunctions:
         assert math_sin == math.sin
 
         # Test importing from a nested module
-        lazy_target = import_module("lai_run.cli.lazy.LazyTarget")
+        lazy_target = import_module("nemo_run.cli.lazy.LazyTarget")
         assert lazy_target == LazyTarget
 
         # Test non-existent module

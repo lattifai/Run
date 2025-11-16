@@ -1,4 +1,4 @@
-name: Publish Source Distribution
+name: Publish PyPi wheel
 
 on:
   workflow_dispatch:
