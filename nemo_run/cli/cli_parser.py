@@ -1369,15 +1369,34 @@ def _signature(fn: Callable):
 
 
 def _args_to_kwargs(fn: Callable, args: List[str]) -> List[str]:
+    """
+    Convert positional arguments to keyword arguments based on function signature.
+
+    Supports mixing positional and keyword arguments. Positional arguments are mapped
+    to parameters that haven't been set by keyword arguments yet.
+
+    Args:
+        fn: The function or callable to get signature from
+        args: List of arguments (mix of positional and keyword)
+
+    Returns:
+        List of keyword arguments (all with = sign)
+    """
+    # Get the actual function and signature
     if isinstance(fn, (Config, Partial)):
         signature = inspect.signature(fn.__fn_or_cls__)
+        # Get parameters already set in the Partial/Config
+        already_set = set(fn.__arguments__.keys()) if hasattr(fn, '__arguments__') else set()
     elif isinstance(fn, (list, tuple)):
         signature = None
+        already_set = set()
     else:
         try:
             signature = inspect.signature(fn)
         except Exception:
             signature = inspect.signature(fn.__class__)
+        already_set = set()
+
     if signature is None:
         for arg in args:
             if "=" not in arg:
@@ -1386,35 +1405,51 @@ def _args_to_kwargs(fn: Callable, args: List[str]) -> List[str]:
                     arg,
                     {"position": len(args)},
                 )
-
         return args
+
     params = list(signature.parameters.values())
 
+    # First pass: identify which parameters are set by keyword arguments in current args
+    set_params_in_args = set()
+    for arg in args:
+        if "=" in arg:
+            # Extract parameter name from keyword argument
+            param_name = arg.split("=")[0].strip()
+            # Handle nested attributes like model.hidden
+            base_param = param_name.split(".")[0].split("[")[0]
+            set_params_in_args.add(base_param)
+
+    # Combine with parameters already set in Partial/Config
+    set_params = already_set | set_params_in_args
+
+    # Second pass: map positional arguments to available parameters
     updated_args = []
-    positional_count = 0
-    seen_kwarg = False
+    positional_idx = 0  # Index for positional arguments in the input
+    param_idx = 0       # Index in the parameter list
 
     for arg in args:
         if "=" in arg:
-            seen_kwarg = True
+            # Keyword argument, keep as is
             updated_args.append(arg)
         else:
-            if seen_kwarg:
-                raise ArgumentParsingError(
-                    "Positional argument found after keyword argument",
-                    arg,
-                    {"position": len(updated_args)},
-                )
-            if positional_count < len(params):
-                param_name = params[positional_count].name
-                updated_args.append(f"{param_name}={arg}")
-                positional_count += 1
+            # Positional argument, find next available parameter
+            while param_idx < len(params):
+                param_name = params[param_idx].name
+                param_idx += 1
+
+                # Skip parameters already set by keyword arguments or in Partial
+                if param_name not in set_params:
+                    updated_args.append(f"{param_name}={arg}")
+                    break
             else:
+                # No more parameters available
                 raise ArgumentParsingError(
                     "Too many positional arguments",
                     arg,
-                    {"max_positional": len(params)},
+                    {"max_positional": len(params), "set_params": list(set_params)},
                 )
+
+    return updated_args
 
     return updated_args
 

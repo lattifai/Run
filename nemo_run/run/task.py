@@ -40,7 +40,7 @@ def dryrun_fn(
 
     table_resolved_args = Table(show_header=True, header_style="bold magenta")
     table_resolved_args.add_column("Argument Name", style="dim", width=20)
-    table_resolved_args.add_column("Resolved Value", width=60)
+    table_resolved_args.add_column("Resolved Value", width=100)
 
     for arg_name in dir(configured_task):
         repr = CustomConfigRepr(getattr(configured_task, arg_name))

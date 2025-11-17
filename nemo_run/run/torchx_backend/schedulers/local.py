@@ -100,7 +100,7 @@ class PersistentLocalScheduler(SchedulerMixin, LocalScheduler):  # type: ignore
         cfg_dict = asdict(cfg)
         cfg_dict["log_dir"] = cfg_dict.pop("job_dir")
         request = self._to_popen_request(app, cfg_dict)  # type: ignore
-        return AppDryRunInfo(request, lambda p: pprint.pformat(asdict(p), indent=2, width=80))
+        return AppDryRunInfo(request, lambda p: pprint.pformat(asdict(p), indent=2, width=100))
 
     def schedule(self, dryrun_info: AppDryRunInfo[PopenRequest]) -> str:
         app_id = super().schedule(dryrun_info=dryrun_info)

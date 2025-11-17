@@ -284,10 +284,15 @@ class LazyEntrypoint(Buildable):
                 if isinstance(fn, LazyTarget):
                     fn = fn.target
 
-                # Convert positional args to keyword args
-                converted_args = _args_to_kwargs(fn, positional_args)
-                keyword_args.extend(converted_args)
-            except Exception:
+                # Combine positional args with keyword args for conversion
+                # This ensures that already-set parameters are skipped
+                all_args = keyword_args + positional_args
+                converted_args = _args_to_kwargs(fn, all_args)
+
+                # The converted args include both keyword and converted positional args
+                # We need to update our lists
+                keyword_args = converted_args
+            except Exception as e:
                 # If conversion fails, treat them as keyword args with error
                 for overwrite in positional_args:
                     raise ValueError(f"Invalid overwrite format: {overwrite}")
@@ -355,9 +360,9 @@ class LazyEntrypoint(Buildable):
         # Handle any @ syntax in the overwrites
         remaining_overwrites = []
         if overwrites:
-            # First, convert any positional arguments to keyword arguments
-            converted_overwrites = []
+            # First, separate positional and keyword arguments
             positional_args = []
+            keyword_args = []
 
             for overwrite in overwrites:
                 # Skip CLI flags
@@ -367,7 +372,7 @@ class LazyEntrypoint(Buildable):
                 if "=" not in overwrite:
                     positional_args.append(overwrite)
                 else:
-                    converted_overwrites.append(overwrite)
+                    keyword_args.append(overwrite)
 
             # Convert positional args if any
             if positional_args:
@@ -378,23 +383,22 @@ class LazyEntrypoint(Buildable):
                     if isinstance(fn, LazyTarget):
                         fn = fn.target
 
-                    # Convert and add to converted_overwrites
-                    converted = _args_to_kwargs(fn, positional_args)
-                    converted_overwrites.extend(converted)
+                    # Combine with keyword args for proper conversion
+                    all_args = keyword_args + positional_args
+                    converted = _args_to_kwargs(fn, all_args)
+                    keyword_args = converted
                 except Exception:
                     # If conversion fails, just pass through
-                    converted_overwrites.extend(positional_args)
+                    keyword_args.extend(positional_args)
 
-            # Now process all overwrites (converted positional + original keyword)
-            for overwrite in converted_overwrites:
+            # Now process all keyword overwrites
+            for overwrite in keyword_args:
                 # Parse the overwrite to get key, op, value
                 match = re.match(r"([^=]+)([*+-]?=)(.*)", overwrite)
                 if not match:
                     raise ValueError(f"Invalid overwrite format: {overwrite}")
 
-                key, op, value = match.groups()
-
-                # If this is a @ syntax, load the config and merge it
+                key, op, value = match.groups()                # If this is a @ syntax, load the config and merge it
                 if (
                     isinstance(value, str)
                     and value.startswith("@")
