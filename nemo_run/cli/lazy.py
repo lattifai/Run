@@ -258,11 +258,42 @@ class LazyEntrypoint(Buildable):
         return self
 
     def _add_overwrite(self, *overwrites: str):
+        """Add overwrites, converting positional arguments to keyword arguments if needed."""
+        # Separate positional and keyword arguments
+        positional_args = []
+        keyword_args = []
+
         for overwrite in overwrites:
             # Skip CLI flags like --lazy, --to-yaml, etc.
             if overwrite.startswith("--"):
                 continue
 
+            # Check if this is a keyword argument (contains =)
+            if "=" in overwrite:
+                keyword_args.append(overwrite)
+            else:
+                positional_args.append(overwrite)
+
+        # If we have positional arguments, convert them to keyword arguments
+        if positional_args:
+            # Get the target function to determine parameter names
+            try:
+                from nemo_run.cli.cli_parser import _args_to_kwargs
+
+                fn = self._target_
+                if isinstance(fn, LazyTarget):
+                    fn = fn.target
+
+                # Convert positional args to keyword args
+                converted_args = _args_to_kwargs(fn, positional_args)
+                keyword_args.extend(converted_args)
+            except Exception:
+                # If conversion fails, treat them as keyword args with error
+                for overwrite in positional_args:
+                    raise ValueError(f"Invalid overwrite format: {overwrite}")
+
+        # Process all keyword arguments
+        for overwrite in keyword_args:
             # Split into key, op, value
             match = re.match(r"([^=]+)([*+-]?=)(.*)", overwrite)
             if not match:
@@ -324,11 +355,38 @@ class LazyEntrypoint(Buildable):
         # Handle any @ syntax in the overwrites
         remaining_overwrites = []
         if overwrites:
+            # First, convert any positional arguments to keyword arguments
+            converted_overwrites = []
+            positional_args = []
+
             for overwrite in overwrites:
-                # Skip CLI flags like --lazy, --to-yaml, etc.
+                # Skip CLI flags
                 if overwrite.startswith("--"):
                     continue
+                # Check if this is a positional argument (no = sign)
+                if "=" not in overwrite:
+                    positional_args.append(overwrite)
+                else:
+                    converted_overwrites.append(overwrite)
 
+            # Convert positional args if any
+            if positional_args:
+                try:
+                    from nemo_run.cli.cli_parser import _args_to_kwargs
+
+                    fn = self._target_
+                    if isinstance(fn, LazyTarget):
+                        fn = fn.target
+
+                    # Convert and add to converted_overwrites
+                    converted = _args_to_kwargs(fn, positional_args)
+                    converted_overwrites.extend(converted)
+                except Exception:
+                    # If conversion fails, just pass through
+                    converted_overwrites.extend(positional_args)
+
+            # Now process all overwrites (converted positional + original keyword)
+            for overwrite in converted_overwrites:
                 # Parse the overwrite to get key, op, value
                 match = re.match(r"([^=]+)([*+-]?=)(.*)", overwrite)
                 if not match:

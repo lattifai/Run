@@ -1113,7 +1113,10 @@ def parse_cli_args(
         else:
             output = output_type
 
-    for arg in _args_to_kwargs(fn, args):
+    # Convert positional arguments to keyword arguments
+    args = _args_to_kwargs(fn, args)
+
+    for arg in args:
         logger.debug(f"Processing argument: {arg}")
         parsed = parser.parse(arg)
         key, (op, value) = next(iter(parsed.items()))
