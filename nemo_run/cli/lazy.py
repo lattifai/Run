@@ -268,8 +268,11 @@ class LazyEntrypoint(Buildable):
             if overwrite.startswith("--"):
                 continue
 
-            # Check if this is a keyword argument (contains =)
-            if "=" in overwrite:
+            # Check if this is a keyword argument (contains = and matches key=value pattern)
+            # A keyword argument must match pattern: word=value or word.word...=value
+            # The key must start with a letter or underscore, followed by word chars, dots, or brackets
+            # URLs and other values with = that don't match this pattern are positional
+            if "=" in overwrite and not overwrite.startswith("http"):
                 keyword_args.append(overwrite)
             else:
                 positional_args.append(overwrite)
@@ -292,7 +295,7 @@ class LazyEntrypoint(Buildable):
                 # The converted args include both keyword and converted positional args
                 # We need to update our lists
                 keyword_args = converted_args
-            except Exception as e:
+            except Exception:
                 # If conversion fails, treat them as keyword args with error
                 for overwrite in positional_args:
                     raise ValueError(f"Invalid overwrite format: {overwrite}")
@@ -368,8 +371,13 @@ class LazyEntrypoint(Buildable):
                 # Skip CLI flags
                 if overwrite.startswith("--"):
                     continue
-                # Check if this is a positional argument (no = sign)
-                if "=" not in overwrite:
+                # Check if this is a positional argument (no = sign or URL-like pattern)
+                # A keyword argument must match pattern: word=value or word.word...=value
+                # The key must start with a letter or underscore, followed by word chars, dots, or brackets
+                # URLs and other values with = that don't match this pattern are positional
+                if "=" not in overwrite or not re.match(
+                    r"^[a-zA-Z_][\w\[\]\.]*\s*[*+-]?=", overwrite
+                ):
                     positional_args.append(overwrite)
                 else:
                     keyword_args.append(overwrite)
@@ -398,7 +406,9 @@ class LazyEntrypoint(Buildable):
                 if not match:
                     raise ValueError(f"Invalid overwrite format: {overwrite}")
 
-                key, op, value = match.groups()                # If this is a @ syntax, load the config and merge it
+                key, op, value = (
+                    match.groups()
+                )  # If this is a @ syntax, load the config and merge it
                 if (
                     isinstance(value, str)
                     and value.startswith("@")

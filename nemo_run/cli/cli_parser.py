@@ -1386,7 +1386,7 @@ def _args_to_kwargs(fn: Callable, args: List[str]) -> List[str]:
     if isinstance(fn, (Config, Partial)):
         signature = inspect.signature(fn.__fn_or_cls__)
         # Get parameters already set in the Partial/Config
-        already_set = set(fn.__arguments__.keys()) if hasattr(fn, '__arguments__') else set()
+        already_set = set(fn.__arguments__.keys()) if hasattr(fn, "__arguments__") else set()
     elif isinstance(fn, (list, tuple)):
         signature = None
         already_set = set()
@@ -1412,7 +1412,10 @@ def _args_to_kwargs(fn: Callable, args: List[str]) -> List[str]:
     # First pass: identify which parameters are set by keyword arguments in current args
     set_params_in_args = set()
     for arg in args:
-        if "=" in arg:
+        # A keyword argument must match pattern: word=value or word.word...=value
+        # The key must start with a letter or underscore, followed by word chars, dots, or brackets
+        # URLs and other values with = that don't match this pattern are positional
+        if "=" in arg and re.match(r"^[a-zA-Z_][\w\[\]\.]*\s*[*+-]?=", arg):
             # Extract parameter name from keyword argument
             param_name = arg.split("=")[0].strip()
             # Handle nested attributes like model.hidden
@@ -1424,11 +1427,11 @@ def _args_to_kwargs(fn: Callable, args: List[str]) -> List[str]:
 
     # Second pass: map positional arguments to available parameters
     updated_args = []
-    positional_idx = 0  # Index for positional arguments in the input
-    param_idx = 0       # Index in the parameter list
+    param_idx = 0  # Index in the parameter list
 
     for arg in args:
-        if "=" in arg:
+        # Use the same logic to determine if this is a keyword argument
+        if "=" in arg and re.match(r"^[a-zA-Z_][\w\[\]\.]*\s*[*+-]?=", arg):
             # Keyword argument, keep as is
             updated_args.append(arg)
         else:
