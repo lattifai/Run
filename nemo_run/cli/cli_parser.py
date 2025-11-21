@@ -1415,7 +1415,9 @@ def _args_to_kwargs(fn: Callable, args: List[str]) -> List[str]:
         # A keyword argument must match pattern: word=value or word.word...=value
         # The key must start with a letter or underscore, followed by word chars, dots, or brackets
         # URLs and other values with = that don't match this pattern are positional
-        if "=" in arg and re.match(r"^[a-zA-Z_][\w\[\]\.]*\s*[*+-]?=", arg):
+        # Match valid operation patterns: =, +=, -=, *=, /=, |=, &=
+        # Skip URLs which may contain = in query parameters
+        if "=" in arg and not arg.startswith("http://") and not arg.startswith("https://") and re.match(r"^[a-zA-Z_][\w\[\]\.]*\s*(=|\+=|-=|\*=|/=|\|=|&=)", arg):
             # Extract parameter name from keyword argument
             param_name = arg.split("=")[0].strip()
             # Handle nested attributes like model.hidden
@@ -1431,9 +1433,14 @@ def _args_to_kwargs(fn: Callable, args: List[str]) -> List[str]:
 
     for arg in args:
         # Use the same logic to determine if this is a keyword argument
-        if "=" in arg and re.match(r"^[a-zA-Z_][\w\[\]\.]*\s*[*+-]?=", arg):
+        # Match valid operation patterns: =, +=, -=, *=, /=, |=, &=
+        # Skip URLs which may contain = in query parameters
+        if "=" in arg and not arg.startswith("http://") and not arg.startswith("https://") and re.match(r"^[a-zA-Z_][\w\[\]\.]*\s*(=|\+=|-=|\*=|/=|\|=|&=)", arg):
             # Keyword argument, keep as is
             updated_args.append(arg)
+        elif "=" in arg and not arg.startswith("http://") and not arg.startswith("https://") and re.match(r"^[a-zA-Z_][\w\[\]\.]*\s*\S*=", arg):
+            # Looks like an operation but doesn't match valid patterns
+            raise ArgumentParsingError("Invalid argument format", arg, {})
         else:
             # Positional argument, find next available parameter
             while param_idx < len(params):
