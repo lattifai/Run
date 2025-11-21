@@ -15,7 +15,7 @@
 
 [project]
 name = "lattifai_run"
-version = "1.0.0.rc2"
+version = "1.0.0.rc3"
 # dynamic = ["version"]
 description = "A powerful tool designed to streamline the configuration, execution and management of Machine Learning experiments across various computing environments."
 dependencies = [
@@ -30,7 +30,6 @@ dependencies = [
     "cryptography < 43.0.0",
     "networkx >= 3.3",
     "omegaconf>=2.3.0",
-    "leptonai>=0.25.0",
     "packaging",
     "toml",
 ]

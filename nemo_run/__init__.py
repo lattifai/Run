@@ -25,7 +25,7 @@ from nemo_run.core.execution.base import Executor, ExecutorMacros, import_execut
 from nemo_run.core.execution.dgxcloud import DGXCloudExecutor
 from nemo_run.core.execution.docker import DockerExecutor
 from nemo_run.core.execution.launcher import FaultTolerance, SlurmRay, SlurmTemplate, Torchrun
-from nemo_run.core.execution.lepton import LeptonExecutor
+# from nemo_run.core.execution.lepton import LeptonExecutor
 from nemo_run.core.execution.local import LocalExecutor
 from nemo_run.core.execution.skypilot import SkypilotExecutor
 from nemo_run.core.execution.slurm import SlurmExecutor
@@ -60,7 +60,7 @@ __all__ = [
     "GitArchivePackager",
     "PatternPackager",
     "help",
-    "LeptonExecutor",
+    # "LeptonExecutor",
     "LocalExecutor",
     "LocalTunnel",
     "Packager",

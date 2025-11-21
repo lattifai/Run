@@ -3807,35 +3807,6 @@ wheels = [
 ]
 
 [[package]]
-name = "leptonai"
-version = "0.25.9"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "anyio" },
-    { name = "click" },
-    { name = "cloudpickle" },
-    { name = "contextlib2" },
-    { name = "exceptiongroup" },
-    { name = "fastapi" },
-    { name = "httpx", extra = ["http2"] },
-    { name = "huggingface-hub" },
-    { name = "ledoc-ui" },
-    { name = "loguru" },
-    { name = "pillow" },
-    { name = "prometheus-fastapi-instrumentator" },
-    { name = "pydantic" },
-    { name = "python-multipart" },
-    { name = "pyyaml" },
-    { name = "requests" },
-    { name = "rich" },
-    { name = "typing-extensions" },
-    { name = "uvicorn" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6d/e4/1c07984bb3cefcf9dc0d74df6c81cddf4f31b433033bc9588e599f755395/leptonai-0.25.9-py3-none-any.whl", hash = "sha256:2370602a781e6d85f3d87217fb02760403068af2d51278b769fae6f887096213", size = 2415467, upload-time = "2025-07-17T06:46:03.61Z" },
-]
-
-[[package]]
 name = "libcst"
 version = "1.6.0"
 source = { registry = "https://pypi.org/simple" }
@@ -4407,7 +4378,6 @@ dependencies = [
     { name = "fiddle" },
     { name = "inquirerpy" },
     { name = "jinja2" },
-    { name = "leptonai" },
     { name = "networkx" },
     { name = "omegaconf" },
     { name = "packaging" },
@@ -4466,7 +4436,6 @@ requires-dist = [
     { name = "inquirerpy", specifier = ">=0.3.4" },
     { name = "jinja2", specifier = ">=3.1.4" },
     { name = "kubernetes", marker = "extra == 'ray'" },
-    { name = "leptonai", specifier = ">=0.25.0" },
     { name = "networkx", specifier = ">=3.3" },
     { name = "omegaconf", specifier = ">=2.3.0" },
     { name = "packaging" },

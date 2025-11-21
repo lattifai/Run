@@ -14,7 +14,7 @@
 # limitations under the License.
 
 from nemo_run.core.execution.dgxcloud import DGXCloudExecutor
-from nemo_run.core.execution.lepton import LeptonExecutor
+# from nemo_run.core.execution.lepton import LeptonExecutor
 from nemo_run.core.execution.local import LocalExecutor
 from nemo_run.core.execution.skypilot import SkypilotExecutor
 from nemo_run.core.execution.slurm import SlurmExecutor
@@ -24,5 +24,5 @@ __all__ = [
     "SlurmExecutor",
     "SkypilotExecutor",
     "DGXCloudExecutor",
-    "LeptonExecutor",
+    # "LeptonExecutor",
 ]
