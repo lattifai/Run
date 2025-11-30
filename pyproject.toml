@@ -15,7 +15,7 @@
 
 [project]
 name = "lattifai_run"
-version = "1.0.0.rc3"
+version = "1.0.1"
 # dynamic = ["version"]
 description = "A powerful tool designed to streamline the configuration, execution and management of Machine Learning experiments across various computing environments."
 dependencies = [
