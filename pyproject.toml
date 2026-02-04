@@ -81,7 +81,6 @@ lint = [
 
 docs = [
     "astroid==3.3.8",
-    "colorama>=0.4.6",
     "myst-parser",
     "sphinx>=7",
     "sphinx-autoapi>=3.0.0",
@@ -100,10 +99,13 @@ managed = true
 prerelease = "allow"
 conflicts = [
     [
-        { group = "docs", package = "colorama" },
-        { extra = "skypilot", package = "colorama" },
-        { extra = "skypilot-all", package = "colorama" }
-    ]
+        { group = "docs" },
+        { extra = "skypilot" },
+    ],
+    [
+        { group = "docs" },
+        { extra = "skypilot-all" },
+    ],
 ]
 
 [tool.pytest.ini_options]
