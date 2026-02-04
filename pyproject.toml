@@ -15,7 +15,7 @@
 
 [project]
 name = "lattifai_run"
-version = "1.0.1"
+version = "1.0.2"
 # dynamic = ["version"]
 description = "A powerful tool designed to streamline the configuration, execution and management of Machine Learning experiments across various computing environments."
 dependencies = [
@@ -100,9 +100,9 @@ managed = true
 prerelease = "allow"
 conflicts = [
     [
-        { group = "docs", name = "colorama" },
-        { extra = "skypilot", name = "colorama" },
-        { extra = "skypilot-all", name = "colorama" }
+        { group = "docs", package = "colorama" },
+        { extra = "skypilot", package = "colorama" },
+        { extra = "skypilot-all", package = "colorama" }
     ]
 ]
 
