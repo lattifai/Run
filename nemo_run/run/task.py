@@ -39,8 +39,8 @@ def dryrun_fn(
     console.print(f"[bold cyan]Dry run for task {fn.__module__}:{fn.__name__}[/bold cyan]")
 
     table_resolved_args = Table(show_header=True, header_style="bold magenta")
-    table_resolved_args.add_column("Argument Name", style="dim", width=20)
-    table_resolved_args.add_column("Resolved Value", width=100)
+    table_resolved_args.add_column("Argument Name", style="dim", min_width=20, no_wrap=True)
+    table_resolved_args.add_column("Resolved Value")
 
     for arg_name in dir(configured_task):
         repr = CustomConfigRepr(getattr(configured_task, arg_name))
